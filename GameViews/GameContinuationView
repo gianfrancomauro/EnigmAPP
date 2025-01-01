@@ -1,0 +1,57 @@
+import SwiftUI
+
+struct GameContinuationView: View {
+    @ObservedObject var model: SudokuModel
+    @Binding var showDifficultySelection: Bool
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Previous Game in Progress")
+                .font(.title2)
+                .multilineTextAlignment(.center)
+            
+            Text("Difficulty: \(model.difficulty.rawValue.capitalized)")
+            Text("Time: \(formatTime(model.elapsedTime))")
+            Text("Mistakes: \(model.mistakeCount)/3")
+            
+            HStack(spacing: 20) {
+                Button(action: {
+                    showDifficultySelection = true
+                    model.resetGame()
+                }) {
+                    Text("New Game")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                
+                Button(action: {
+                    showDifficultySelection = false
+                    model.resumeGame()
+                }) {
+                    Text("Continue")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+            }
+        }
+        .padding()
+        .background(Color(UIColor.systemBackground))
+        .cornerRadius(15)
+        .shadow(radius: 10)
+        .padding()
+    }
+    
+    private func formatTime(_ timeInterval: TimeInterval) -> String {
+        let minutes = Int(timeInterval) / 60
+        let seconds = Int(timeInterval) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+} 
